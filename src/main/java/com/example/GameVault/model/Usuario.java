@@ -5,34 +5,27 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data // Genera Getters, Setters, toString, etc. (Gracias a Lombok)
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="juegos")
-public class Juego {
+@Table(name="usuarios")
+public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String titulo;
+    private String nombre;
 
     @Column(nullable = false)
-    private String descripcion;
-
-    // Almacenaremos el nombre del archivo o la URL de la imagen
-    @Column(nullable = false)
-    private String portadaUrl;
+    private String email;
 
     @Column(nullable = false)
-    private Double precio;
+    private String contrasenia;
 
-    @Column(nullable = false)
-    private String categoria;
-
-    @ManyToOne
-    @JoinColumn(name = "usuario_id")
-    private Usuario usuario;
-
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<Juego> juegos;
 }
