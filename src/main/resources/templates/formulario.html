@@ -9,7 +9,7 @@
                 Sube la información y la portada de un nuevo juego a la bóveda.
             </p>
 
-            <form th:action="${ juego.id == null ? '/juegos' : 'juegos/editar/' + juego.id}" method="post" enctype="multipart/form-data">
+            <form th:action="@{${ juego.id == null ? '/juegos' : '/juegos/editar/' + juego.id}}" method="post" enctype="multipart/form-data">
 
                 <div class="form-group">
                     <label for="titulo" class="form-label">Título del Juego</label>

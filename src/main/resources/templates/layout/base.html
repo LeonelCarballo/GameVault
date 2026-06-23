@@ -6,15 +6,25 @@
     <link rel="stylesheet" th:href="@{/styles/style.css}">
 </head>
 <body>
-    
-    <nav>
-        <a href="/juegos" class="nav-brand">🎮 GameVault</a>
-        <div class="nav-links">
-            <a href="/juegos">Catálogo</a>
+
+<nav>
+    <a href="/juegos" class="nav-brand">🎮 GameVault</a>
+    <div class="nav-links">
+        <a href="/juegos">Inicio Catálogo</a>
+        <a href="/fragments-demo">Fragmentos</a>
+
+        <th:block th:if="${session.usuario_id == null}">
+            <a href="/login">Iniciar Sesión</a>
+            <a href="/registro">Registrase</a>
+        </th:block>
+
+        <th:block th:if="${session.usuario_id != null}">
+            <a href="/mis-juegos">Mis Juegos</a>
             <a href="/juegos/nuevo">Subir Juego</a>
-            <a href="/fragments-demo" style="color: var(--success); margin-left:20px;">Fragmentos</a>
-        </div>
-    </nav>
+            <a href="/logout">Cerrar sesión</a>
+        </th:block>
+    </div>
+</nav>
 
     <main class="container" th:replace="${content}">
         Contenido por defecto que sera remplazado

@@ -61,7 +61,8 @@ public class GameController {
     }
 
     @GetMapping("/juegos/nuevo")
-    public String mostrarFormulario() {
+    public String mostrarFormularioNuevo(Model model) {
+        model.addAttribute("juego", new Juego());
         return "formulario";
     }
 
@@ -77,6 +78,8 @@ public class GameController {
         nuevoJuego.setDescripcion(descripcion);
         nuevoJuego.setPrecio(precio);
         nuevoJuego.setCategoria(categoria);
+
+        nuevoJuego.setUsuario(usuarioService.obtenerUsuarioLogueado());
 
         juegoService.guardarJuego(nuevoJuego, portada);
 

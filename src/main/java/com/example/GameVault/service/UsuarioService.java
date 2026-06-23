@@ -3,7 +3,9 @@ package com.example.GameVault.service;
 import com.example.GameVault.model.Juego;
 import com.example.GameVault.model.Usuario;
 import com.example.GameVault.repository.UsuarioRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -13,19 +15,39 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public Usuario obtenerUsuarioLogueado() {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(1L);
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-        if (usuarioOpt.isPresent()) {
-            return usuarioOpt.get();
-        } else {
-            Usuario nuevoUsuario = new Usuario();
-            nuevoUsuario.setNombre("Martin Bernal");
-            nuevoUsuario.setEmail("martin@gmail.com");
-            nuevoUsuario.setContrasenia("12345678");
+    @Autowired
+    private HttpSession httpSession;
 
-            return usuarioRepository.save(nuevoUsuario);
+    public Usuario registrarUsuario(Usuario usuario) {
+        usuario.setContrasenia(passwordEncoder.encode(usuario.getContrasenia()));
+        return usuarioRepository.save(usuario);
+    }
+
+    public Usuario autenticarUsuario(String email, String contrasenia) {
+        Optional<Usuario> usuarioopt = usuarioRepository.findByEmail(email);
+
+        if (usuarioopt.isPresent()) {
+            Usuario usuario = usuarioopt.get();
+            if (passwordEncoder.matches(contrasenia, usuario.getContrasenia())) {
+                return usuario;
+            }
         }
+        return null;
+    }
+
+    public Usuario obtenerUsuarioLogueado() {
+        Long usuarioId = (Long) httpSession.getAttribute("usuario_id");
+
+        if (usuarioId != null) {
+            Optional<Usuario> usuarioopt = usuarioRepository.findById(usuarioId);
+            if (usuarioopt.isPresent()) {
+                return usuarioopt.get();
+            }
+        }
+        return null;
     }
 
 }
